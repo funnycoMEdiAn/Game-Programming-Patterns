@@ -15,8 +15,7 @@ public class PlayerController : MonoBehaviour
     Command _last_command;
 
     Stack<Command> _undo_commands = new Stack<Command>();
-
-    
+    Stack<Command> _redo_commands = new Stack<Command>();
 
     void SwapCommands(ref Command A, ref Command B)
     {
@@ -41,24 +40,28 @@ public class PlayerController : MonoBehaviour
         {
             cmd_W.Execute(_rigidbody);
             _last_command = cmd_W;
+            Debug.Log("W pressed");
             //transform.position += Vector3.forward;
         }
         if (Input.GetKeyDown(KeyCode.S))
         {
             cmd_S.Execute(_rigidbody);
             _last_command = cmd_S;
+            Debug.Log("S pressed");
             //transform.position += Vector3.back;
         }
         if (Input.GetKeyDown(KeyCode.A))
         {
             cmd_A.Execute(_rigidbody);
             _last_command = cmd_A;
+            Debug.Log("A pressed");
             //transform.position += Vector3.left;
         }
         if (Input.GetKeyDown(KeyCode.D))
         {
             cmd_D.Execute(_rigidbody);
             _last_command = cmd_D;
+            Debug.Log("D pressed");
             //transform.position += Vector3.right;
         }
         if (Input.GetKeyDown(KeyCode.Space))
@@ -70,6 +73,14 @@ public class PlayerController : MonoBehaviour
         {
             _last_command.Undo(_rigidbody);
             _last_command = new DoNothingCommand();
+            Debug.Log("Z pressed");
+        }
+
+        if (Input.GetKeyDown(KeyCode.R))
+        {
+            _last_command.Redo(_rigidbody);
+            _last_command = new DoNothingCommand();
+            Debug.Log("R pressed");
         }
 
         /*
