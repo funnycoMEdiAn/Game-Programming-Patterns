@@ -14,11 +14,6 @@ public class DoNothingCommand : Command
         
     }
 
-    public override void Redo(Rigidbody rb)
-    {
-
-    }
-
     void Start()
     {
         

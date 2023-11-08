@@ -14,6 +14,9 @@ public class PlayerController : MonoBehaviour
 
     Command _last_command;
 
+
+    // _undo_commands.push // C# stack // push työntää, pop ottaa ylimmän pois
+    // Stacks to store the commands
     Stack<Command> _undo_commands = new Stack<Command>();
     Stack<Command> _redo_commands = new Stack<Command>();
 
@@ -27,11 +30,6 @@ public class PlayerController : MonoBehaviour
     void Start()
     {
         _rigidbody = GetComponent<Rigidbody>();
-
-        // _undo_commands.push // C# stack // push työntää, pop ottaa ylimmän pois
-        //_undo_commands.Push(cmd_W);
-        //_undo_commands.Pop(cmd_W);
-
     }
 
     void Update()
@@ -39,31 +37,47 @@ public class PlayerController : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.W))
         {
             cmd_W.Execute(_rigidbody);
-            _last_command = cmd_W;
+            _undo_commands.Push(cmd_W);
+            _redo_commands.Clear();
+
             Debug.Log("W pressed");
+            //_last_command = cmd_W;
             //transform.position += Vector3.forward;
         }
+
         if (Input.GetKeyDown(KeyCode.S))
         {
             cmd_S.Execute(_rigidbody);
-            _last_command = cmd_S;
+            _undo_commands.Push(cmd_S);
+            _redo_commands.Clear();
+
             Debug.Log("S pressed");
+            //_last_command = cmd_S;
             //transform.position += Vector3.back;
         }
+
         if (Input.GetKeyDown(KeyCode.A))
         {
             cmd_A.Execute(_rigidbody);
-            _last_command = cmd_A;
+            _undo_commands.Push(cmd_A);
+            _redo_commands.Clear();
+
             Debug.Log("A pressed");
+            //_last_command = cmd_A;
             //transform.position += Vector3.left;
         }
+
         if (Input.GetKeyDown(KeyCode.D))
         {
             cmd_D.Execute(_rigidbody);
-            _last_command = cmd_D;
+            _undo_commands.Push(cmd_D);
+            _redo_commands.Clear();
+
             Debug.Log("D pressed");
+            //_last_command = cmd_D;
             //transform.position += Vector3.right;
         }
+
         if (Input.GetKeyDown(KeyCode.Space))
         {
             _rigidbody.AddForce(5.0f * transform.up, ForceMode.Impulse);
@@ -71,19 +85,35 @@ public class PlayerController : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.Z))
         {
-            _last_command.Undo(_rigidbody);
-            _last_command = new DoNothingCommand();
+            if(_undo_commands.Count > 0)
+            {
+                Command cmd = _undo_commands.Pop();
+                _redo_commands.Push(cmd);
+                cmd.Undo(_rigidbody);
+                //_undo_commands.Pop().Undo(_rigidbody);
+            }
+
+            //_last_command = new DoNothingCommand();
             Debug.Log("Z pressed");
         }
 
         if (Input.GetKeyDown(KeyCode.R))
         {
+            if (_redo_commands.Count > 0)
+            {
+                Command cmd = _redo_commands.Pop();
+                _undo_commands.Push(cmd);
+                cmd.Execute(_rigidbody);
+            }
+
+            /*  //Omat vanhat koodit
             _last_command.Redo(_rigidbody);
             _last_command = new DoNothingCommand();
             Debug.Log("R pressed");
+            */
         }
 
-        /*
+        /* //Jos haluaa vaihtaa jotkin napit toisin päin
         if (Input.GetKeyDown(KeyCode.Escape)){
             SwapCommands(ref cmd_A, ref cmd_D);
         }
