@@ -6,6 +6,9 @@ using UnityEngine;
 public class PlayerController : MonoBehaviour
 {
     Rigidbody _rigidbody;
+    public GameObject Coin;
+    public GameObject Enemy;
+
 
     Vector3 start_pos;
 
@@ -38,6 +41,10 @@ public class PlayerController : MonoBehaviour
     {
         _rigidbody = GetComponent<Rigidbody>();
         start_pos = transform.position;
+    }
+    private void OnTriggerEnter(Collider other)
+    {
+        Destroy(other.gameObject); // Destroy the coin!
     }
 
     IEnumerator Replay()
@@ -79,7 +86,6 @@ public class PlayerController : MonoBehaviour
                 _undo_commands.Push(cmd_W);
                 _redo_commands.Clear();
 
-                Debug.Log("W pressed");
                 //_last_command = cmd_W;
                 //transform.position += Vector3.forward;
             }
@@ -90,7 +96,6 @@ public class PlayerController : MonoBehaviour
                 _undo_commands.Push(cmd_S);
                 _redo_commands.Clear();
 
-                Debug.Log("S pressed");
                 //_last_command = cmd_S;
                 //transform.position += Vector3.back;
             }
@@ -101,7 +106,6 @@ public class PlayerController : MonoBehaviour
                 _undo_commands.Push(cmd_A);
                 _redo_commands.Clear();
 
-                Debug.Log("A pressed");
                 //_last_command = cmd_A;
                 //transform.position += Vector3.left;
             }
@@ -111,8 +115,6 @@ public class PlayerController : MonoBehaviour
                 cmd_D.Execute(_rigidbody);
                 _undo_commands.Push(cmd_D);
                 _redo_commands.Clear();
-
-                Debug.Log("D pressed");
                 //_last_command = cmd_D;
                 //transform.position += Vector3.right;
             }
@@ -133,7 +135,6 @@ public class PlayerController : MonoBehaviour
                 }
 
                 //_last_command = new DoNothingCommand();
-                Debug.Log("Z pressed");
             }
 
             if (Input.GetKeyDown(KeyCode.X))

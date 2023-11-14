@@ -3,14 +3,14 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 
-public class Coin : MonoBehaviour
+public class Enemy : MonoBehaviour
 {
     // The event / action "list" that has all "observers" registered
-    public static event Action OnCoinCollected;
+    public static event Action EnemyDestroyed;
 
     private void OnDisable()
     {
-        OnCoinCollected?.Invoke();
-        Debug.Log("Coin collected");
+        EnemyDestroyed?.Invoke();
+        Debug.Log("Enemy killed");
     }
 }
