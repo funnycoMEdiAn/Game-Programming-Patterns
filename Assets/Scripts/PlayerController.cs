@@ -5,6 +5,15 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
+    public enum PlayerState
+    {
+        JUMPING,
+        STANDING,
+        CROUCHING
+    }
+
+    public PlayerState my_state = PlayerState.JUMPING;
+
     Rigidbody _rigidbody;
     public GameObject Coin;
     public GameObject Enemy;
@@ -57,6 +66,13 @@ public class PlayerController : MonoBehaviour
 
         bReplaying = false;
     }
+
+    public void OnCollisionEnter(Collision collision)
+    {
+        // ?? PlayerState my_state = PlayerState.STANDING;
+       // Lis‰‰ jotain schaisee jolla tunnistetaa et pelaaja osuu groundii ja sen state vaihtuu
+    }
+
 
     void Update()
     {
