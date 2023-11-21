@@ -69,7 +69,8 @@ public class PlayerController : MonoBehaviour
 
     public void OnCollisionEnter(Collision collision)
     {
-        // ?? PlayerState my_state = PlayerState.STANDING;
+         my_state = PlayerState.STANDING;
+        Debug.Log(my_state);
        // Lisää jotain schaisee jolla tunnistetaa et pelaaja osuu groundii ja sen state vaihtuu
     }
 
@@ -102,6 +103,9 @@ public class PlayerController : MonoBehaviour
                 _undo_commands.Push(cmd_W);
                 _redo_commands.Clear();
 
+                my_state = PlayerState.STANDING;
+                Debug.Log(my_state);
+
                 //_last_command = cmd_W;
                 //transform.position += Vector3.forward;
             }
@@ -111,6 +115,9 @@ public class PlayerController : MonoBehaviour
                 cmd_S.Execute(_rigidbody);
                 _undo_commands.Push(cmd_S);
                 _redo_commands.Clear();
+
+                my_state = PlayerState.STANDING;
+                Debug.Log(my_state);
 
                 //_last_command = cmd_S;
                 //transform.position += Vector3.back;
@@ -122,6 +129,9 @@ public class PlayerController : MonoBehaviour
                 _undo_commands.Push(cmd_A);
                 _redo_commands.Clear();
 
+                my_state = PlayerState.STANDING;
+                Debug.Log(my_state);
+
                 //_last_command = cmd_A;
                 //transform.position += Vector3.left;
             }
@@ -131,6 +141,10 @@ public class PlayerController : MonoBehaviour
                 cmd_D.Execute(_rigidbody);
                 _undo_commands.Push(cmd_D);
                 _redo_commands.Clear();
+
+                my_state = PlayerState.STANDING;
+                Debug.Log(my_state);
+
                 //_last_command = cmd_D;
                 //transform.position += Vector3.right;
             }
@@ -138,6 +152,38 @@ public class PlayerController : MonoBehaviour
             if (Input.GetKeyDown(KeyCode.Space))
             {
                 _rigidbody.AddForce(5.0f * transform.up, ForceMode.Impulse);
+                my_state = PlayerState.JUMPING;
+                Debug.Log(my_state);
+            }
+
+
+            if (Input.GetKeyDown(KeyCode.C))
+            {
+                if (_undo_commands.Count > 0)
+                {
+                    transform.localScale = new Vector3(1f, 0.5f, 1f);
+
+                    my_state = PlayerState.CROUCHING;
+                    Debug.Log(my_state);
+                }
+
+                else
+                {
+                    transform.localScale = new Vector3(1f, 1f, 1f);
+                }
+
+            }
+
+            if (Input.GetKeyDown(KeyCode.V)) //Typerä tapa päästä pois chroucista
+            {
+                if (_undo_commands.Count > 0)
+                {
+                    transform.localScale = new Vector3(1f, 1f, 1f);
+
+                    my_state = PlayerState.STANDING;
+                    Debug.Log(my_state);
+                }
+
             }
 
             if (Input.GetKeyDown(KeyCode.Z))
@@ -147,6 +193,10 @@ public class PlayerController : MonoBehaviour
                     Command cmd = _undo_commands.Pop();
                     _redo_commands.Push(cmd);
                     cmd.Undo(_rigidbody);
+
+                    my_state = PlayerState.STANDING;
+                    Debug.Log(my_state);
+
                     //_undo_commands.Pop().Undo(_rigidbody);
                 }
 
@@ -160,6 +210,10 @@ public class PlayerController : MonoBehaviour
                     Command cmd = _redo_commands.Pop();
                     _undo_commands.Push(cmd);
                     cmd.Execute(_rigidbody);
+
+                    my_state = PlayerState.STANDING;
+                    Debug.Log(my_state);
+
                 }
 
                 /*  //Omat vanhat koodit
